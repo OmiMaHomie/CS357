@@ -1,0 +1,14 @@
+/home/omimahomie/cs357/BungleSqlInjector/bin/Debug/net8.0/BungleSqlInjector
+/home/omimahomie/cs357/BungleSqlInjector/bin/Debug/net8.0/BungleSqlInjector.deps.json
+/home/omimahomie/cs357/BungleSqlInjector/bin/Debug/net8.0/BungleSqlInjector.runtimeconfig.json
+/home/omimahomie/cs357/BungleSqlInjector/bin/Debug/net8.0/BungleSqlInjector.dll
+/home/omimahomie/cs357/BungleSqlInjector/bin/Debug/net8.0/BungleSqlInjector.pdb
+/home/omimahomie/cs357/BungleSqlInjector/obj/Debug/net8.0/BungleSqlInjector.GeneratedMSBuildEditorConfig.editorconfig
+/home/omimahomie/cs357/BungleSqlInjector/obj/Debug/net8.0/BungleSqlInjector.AssemblyInfoInputs.cache
+/home/omimahomie/cs357/BungleSqlInjector/obj/Debug/net8.0/BungleSqlInjector.AssemblyInfo.cs
+/home/omimahomie/cs357/BungleSqlInjector/obj/Debug/net8.0/BungleSqlInjector.csproj.CoreCompileInputs.cache
+/home/omimahomie/cs357/BungleSqlInjector/obj/Debug/net8.0/BungleSqlInjector.dll
+/home/omimahomie/cs357/BungleSqlInjector/obj/Debug/net8.0/refint/BungleSqlInjector.dll
+/home/omimahomie/cs357/BungleSqlInjector/obj/Debug/net8.0/BungleSqlInjector.pdb
+/home/omimahomie/cs357/BungleSqlInjector/obj/Debug/net8.0/BungleSqlInjector.genruntimeconfig.cache
+/home/omimahomie/cs357/BungleSqlInjector/obj/Debug/net8.0/ref/BungleSqlInjector.dll
