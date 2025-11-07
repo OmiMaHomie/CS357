@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BungleSqlInjector")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+788b7298321e477e84ee1ec529bf18b8f20d957d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3dfebc8936cc8daaa9af9527da9d133ffe6ad3ba")]
 [assembly: System.Reflection.AssemblyProductAttribute("BungleSqlInjector")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BungleSqlInjector")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

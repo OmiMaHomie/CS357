@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/home/omimahomie/cs357/BungleSqlInjector/BungleSqlInjector.csproj": {}
+    "/home/omimahomie/cs357/sqlInjector/BungleSqlInjector.csproj": {}
   },
   "projects": {
-    "/home/omimahomie/cs357/BungleSqlInjector/BungleSqlInjector.csproj": {
+    "/home/omimahomie/cs357/sqlInjector/BungleSqlInjector.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/omimahomie/cs357/BungleSqlInjector/BungleSqlInjector.csproj",
+        "projectUniqueName": "/home/omimahomie/cs357/sqlInjector/BungleSqlInjector.csproj",
         "projectName": "BungleSqlInjector",
-        "projectPath": "/home/omimahomie/cs357/BungleSqlInjector/BungleSqlInjector.csproj",
+        "projectPath": "/home/omimahomie/cs357/sqlInjector/BungleSqlInjector.csproj",
         "packagesPath": "/home/omimahomie/.nuget/packages/",
-        "outputPath": "/home/omimahomie/cs357/BungleSqlInjector/obj/",
+        "outputPath": "/home/omimahomie/cs357/sqlInjector/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/omimahomie/.nuget/NuGet/NuGet.Config"

